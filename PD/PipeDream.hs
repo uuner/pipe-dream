@@ -26,7 +26,7 @@ showPD :: PipeDream -> String
 showPD (PD p) = show p
                              
 toRows :: PipeDream -> [[Int]]
-toRows d = transpose $ toColumns d
+toRows = transpose . toColumns
 
 toColumns :: PipeDream -> [[Int]]
 toColumns (PD x) = map (prolong l) x
@@ -38,7 +38,7 @@ fromColumns xs = PD $ zipWith (\n s -> take n s) [m-1,m-2..1] (init xs)
     where m = length xs
 
 fromRows :: [[Int]] -> PipeDream
-fromRows xs = fromColumns (transpose xs)
+fromRows = fromColumns . transpose
 
 --i - row, j - column
 getDream (PD x) i j = x!!(j-1)!!(i-1)
@@ -104,9 +104,11 @@ pipes2poly ps = PL (map monom ps)
     where 
     monom p = (map (\xs -> length $ filter (==1) xs) (toRows p), 1)
 
+polyList :: Polynomial -> [([Int], Int)]
 polyList (PL p) = p
 
-coefNub xs = map (\x -> (length x, head x)) $ group $ sort xs
+coefNub :: Ord t => [t] -> [(Int, t)]
+coefNub = map (\x -> (length x, head x)) . group . sort
 
 newtype TupleNewline a b c d = T4 (a,b,c,d) deriving (Eq, Ord)
 instance (Show a, Show b, Show c, Show d) => Show (TupleNewline a b c d) where

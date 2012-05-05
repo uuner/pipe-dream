@@ -10,10 +10,10 @@ isValidPermutation p = len == length (mynub p) && maximum p == fromIntegral len
     where len = length p
 
 order :: Permutation -> Integer
-order p = fromIntegral (length p)
+order = fromIntegral . length
 
 invert :: Permutation -> Permutation
-invert p = map snd $ sort $ zip p [1..]
+invert = map snd . sort . flip zip [1..]
 
 -- apply permutation 'perm' to the list
 applyPermutation :: Permutation -> [a] -> [a]
@@ -24,7 +24,7 @@ lastPermutation n = reverse [1..n]
 
 -- composition
 (*>) :: Permutation -> Permutation -> Permutation
-(*>) q p =  map (\x -> q!!(fromIntegral x - 1)) p 
+(*>) q =  map (\x -> q!!(fromIntegral x - 1))
 
 -- alias for 'addTransposition'
 (%>) :: Permutation -> (Integer, Integer) -> Permutation
@@ -69,5 +69,4 @@ allperms n = perms [1..n]
     where
     perms [] = [[]]
     perms (x:xs) = [ p ++ [x] ++ s | xs' <- perms xs, (p, s) <- zip (inits xs') (tails xs') ]
-
 
